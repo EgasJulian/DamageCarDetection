@@ -1,0 +1,111 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+venv/
+build/
+dist/
+eggs/
+.eggs/
+sdist/
+wheel/
+pip-log.txt
+pip-delete-this-directory.txt
+*.egg-info/
+.installed.cfg
+*.whl
+MANIFEST.in
+
+# PyInstaller
+build
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# Poetry related
+poetry.lock
+.venv
+
+# mypy
+.mypy_cache/
+mypy_report.xml
+mypy_html_report/
+
+# Ruff cache
+.ruff_cache/
+
+# pytype
+.pytype/
+
+# Flake8
+.flake8
+
+# pytest cache
+.pytest_cache/
+
+# Coverage data
+.coverage
+.coverage.*
+coverage.xml
+tmp.edg
+htmlcov/
+
+# Nox
+.nox/
+
+# PDM
+__pypackages__/
+.pdm-venv
+
+# Environment variable files
+.env
+.env.*
+!.env.example
+!.env.sample
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# VS Code
+.vscode/
+
+# Emacs and derivatives
+*.elc
+*.eln
+.emacs.d/
+_auto_
+
+# macOS
+.DS_Store
+
+# Log files
+*.log
+
+# Temporary files
+*.tmp
+*.swp
+*.bak
+*.asv
+~*
+
+# OS Specific files - feel free to remove the ones you don't use
+[Dd]esktop.ini
+Thumbs.db
+$RECYCLE.BIN/
+System Volume Information/
+.localized

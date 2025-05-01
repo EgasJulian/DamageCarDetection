@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Analizador automático de daños en vehículos utilizando inteligencia artificial">
+    <title>Analizador de Daños de Vehículos | IA Vehicle Inspector</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4A0D29;
+            --primary-light: #6b1d40;
+            --primary-dark: #34091d;
+            --secondary: #3498db;
+            --secondary-hover: #2980b9;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-400: #ced4da;
+            --gray-500: #adb5bd;
+            --gray-700: #495057;
+            --gray-900: #212529;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --white: #ffffff;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        /* Importamos CSS para renderizar markdown */
+        @import url('https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown-light.min.css');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--gray-900);
+            background-color: var(--gray-100);
+            padding: 0;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 20px 0;
+            box-shadow: var(--box-shadow);
+        }
+
+        header .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        main {
+            padding: 40px 0;
+        }
+
+        .card {
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: var(--box-shadow);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .title-section {
+            border-bottom: 2px solid var(--gray-200);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: var(--gray-700);
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+
+        .file-input-container {
+            position: relative;
+            overflow: hidden;
+            border: 2px dashed var(--gray-400);
+            border-radius: 8px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            background-color: var(--gray-100);
+        }
+
+        .file-input-container:hover {
+            border-color: var(--primary);
+            background-color: rgba(74, 13, 41, 0.03);
+        }
+
+        .file-input-container i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .file-input-container p {
+            margin: 10px 0;
+            color: var(--gray-700);
+        }
+
+        .file-input-inner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #fileInput {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-name {
+            display: none;
+            margin-top: 15px;
+            padding: 8px 12px;
+            background-color: var(--gray-200);
+            border-radius: 4px;
+            font-size: 0.9rem;
+            color: var(--gray-700);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 500;
+            text-align: center;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background-color: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            background-color: var(--gray-400);
+            cursor: not-allowed;
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        .action-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 25px;
+        }
+
+        #loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            color: var(--gray-700);
+            font-weight: 500;
+        }
+
+        .spinner {
+            display: inline-block;
+            margin-right: 10px;
+            border: 3px solid var(--gray-300);
+            border-radius: 50%;
+            border-top: 3px solid var(--primary);
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        #error {
+            display: none;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: rgba(231, 76, 60, 0.1);
+            color: var(--danger);
+            font-weight: 500;
+            border-left: 4px solid var(--danger);
+        }
+
+        #error i {
+            margin-right: 8px;
+        }
+
+        #imagePreview {
+            display: none;
+            max-width: 100%;
+            height: auto;
+            margin: 20px auto;
+            border-radius: 8px;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+
+        #previewArea {
+            display: none;
+            text-align: center;
+        }
+
+        #results {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .results-heading {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .results-heading i {
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+
+        #damageList {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #damageList li {
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            background-color: var(--gray-100);
+            border-radius: 6px;
+            border-left: 3px solid var(--primary);
+            font-weight: 500;
+        }
+        
+        /* Estilos para el área de presupuesto */
+        .budget-content {
+            padding: 15px;
+            background-color: var(--gray-100);
+            border-radius: 8px;
+        }
+        
+        .budget-content h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .budget-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        .budget-content table th,
+        .budget-content table td {
+            padding: 10px;
+            border: 1px solid var(--gray-300);
+        }
+        
+        .budget-content table th {
+            background-color: rgba(74, 13, 41, 0.1);
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .budget-content table tr:nth-child(even) {
+            background-color: var(--gray-200);
+        }
+        
+        .budget-content ul {
+            padding-left: 20px;
+            margin: 15px 0;
+        }
+        
+        .budget-content ul li {
+            margin-bottom: 8px;
+        }
+        
+        .budget-content .total-cost {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary);
+            background-color: rgba(74, 13, 41, 0.05);
+            padding: 10px 15px;
+            border-radius: 6px;
+            border-left: 3px solid var(--primary);
+            margin-top: 20px;
+            display: inline-block;
+        }
+        
+        /* Clase para renderizar markdown */
+        .markdown-body {
+            font-family: inherit;
+            padding: 15px;
+            background-color: var(--gray-100);
+            border-radius: 8px;
+        }
+
+        footer {
+            background-color: var(--primary-dark);
+            color: var(--white);
+            padding: 20px 0;
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            header .container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+                margin-top: 10px;
+            }
+            
+            .card {
+                padding: 20px 15px;
+            }
+            
+            .file-input-container {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-car-crash"></i>
+                <h1>IA Vehicle Inspector</h1>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="card">
+            <div class="title-section">
+                <h2>Analizador de Daños de Vehículos</h2>
+                <p class="subtitle">Sube una imagen de un vehículo con daños para obtener un inventario preliminar generado por IA.</p>
+            </div>
+
+            <form id="uploadForm" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="fileInput">Imagen del vehículo:</label>
+                    <div class="file-input-container">
+                        <div class="file-input-inner">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <h3>Arrastra y suelta o haz clic para seleccionar</h3>
+                            <p>Formatos aceptados: JPG, PNG, JPEG</p>
+                            <input type="file" id="fileInput" name="file" accept="image/*" required>
+                        </div>
+                        <div id="fileName" class="file-name"></div>
+                    </div>
+                </div>
+
+                <div class="action-container">
+                    <button type="submit" id="submitButton" class="btn btn-primary">
+                        <i class="fas fa-search"></i>Analizar Daños
+                    </button>
+                </div>
+            </form>
+
+            <div id="loading">
+                <div class="spinner"></div>
+                Analizando imagen, por favor espera...
+            </div>
+
+            <div id="error">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="errorMessage"></span>
+            </div>
+        </div>
+
+        <div id="previewArea" class="card">
+            <div class="title-section">
+                <h2>Vista Previa</h2>
+            </div>
+            <img id="imagePreview" src="#" alt="Vista previa de la imagen subida" />
+        </div>
+
+        <div id="results" class="card">
+            <div class="title-section">
+                <div class="results-heading">
+                    <i class="fas fa-clipboard-check"></i>
+                    <h2>Resultados del Análisis</h2>
+                </div>
+            </div>
+            <ul id="damageList"></ul>
+        </div>
+
+        <div id="budgetArea" class="card" style="display: none;">
+            <div class="title-section">
+                <div class="results-heading">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    <h2>Presupuesto Estimado</h2>
+                </div>
+            </div>
+            <div id="budgetContent" class="budget-content"></div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 IA Vehicle Inspector | Sistema de análisis de daños en vehículos</p>
+        </div>
+    </footer>
+
+    <script>
+        // Importar marked.js para procesar markdown
+        document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"><\/script>');
+        
+        const form = document.getElementById('uploadForm');
+        const fileInput = document.getElementById('fileInput');
+        const fileName = document.getElementById('fileName');
+        const submitButton = document.getElementById('submitButton');
+        const loadingDiv = document.getElementById('loading');
+        const errorDiv = document.getElementById('error');
+        const errorMessage = document.getElementById('errorMessage');
+        const resultsDiv = document.getElementById('results');
+        const damageListUl = document.getElementById('damageList');
+        const imagePreview = document.getElementById('imagePreview');
+        const previewArea = document.getElementById('previewArea');
+        const budgetArea = document.getElementById('budgetArea');
+        const budgetContent = document.getElementById('budgetContent');
+
+        // Mostrar nombre de archivo seleccionado
+        fileInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                // Mostrar nombre del archivo
+                fileName.textContent = file.name;
+                fileName.style.display = 'block';
+                
+                // Configurar vista previa de la imagen
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                    previewArea.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+                
+                // Limpiar resultados anteriores
+                resultsDiv.style.display = 'none';
+                errorDiv.style.display = 'none';
+                budgetArea.style.display = 'none';
+                damageListUl.innerHTML = '';
+                budgetContent.innerHTML = '';
+                
+                // Habilitar botón de envío
+                submitButton.disabled = false;
+            } else {
+                fileName.style.display = 'none';
+                imagePreview.style.display = 'none';
+                previewArea.style.display = 'none';
+                submitButton.disabled = true;
+            }
+        });
+
+        form.addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const file = fileInput.files[0];
+            if (!file) {
+                showError("Por favor, selecciona un archivo de imagen.");
+                return;
+            }
+
+            // Validar tipo de archivo
+            const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+            if (!validTypes.includes(file.type)) {
+                showError("Formato de archivo no válido. Por favor, selecciona una imagen JPG, JPEG o PNG.");
+                return;
+            }
+
+            // Preparar UI para carga
+            loadingDiv.style.display = 'flex';
+            errorDiv.style.display = 'none';
+            resultsDiv.style.display = 'none';
+            budgetArea.style.display = 'none';
+            submitButton.disabled = true;
+            damageListUl.innerHTML = '';
+            budgetContent.innerHTML = '';
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/analyze-damage/', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    let errorMsg = `Error del servidor: ${response.status} ${response.statusText}`;
+                    try {
+                        const errorData = await response.json();
+                        if (errorData && errorData.error) {
+                            errorMsg = `Error: ${errorData.error}`;
+                        } else if (errorData && errorData.detail) {
+                            errorMsg = `Error: ${errorData.detail}`;
+                        }
+                    } catch (e) {
+                        // Si no se puede parsear el JSON, usa el texto del status
+                    }
+                    throw new Error(errorMsg);
+                }
+
+                const data = await response.json();
+
+                // Mostrar resultados de daños
+                if (data.damaged_parts && data.damaged_parts.length > 0) {
+                    data.damaged_parts.forEach(part => {
+                        const li = document.createElement('li');
+                        li.textContent = part;
+                        damageListUl.appendChild(li);
+                    });
+                    resultsDiv.style.display = 'block';
+                } else {
+                    // Mostrar un mensaje si la lista está vacía (incluso si Gemini dijo 'no daños')
+                    const li = document.createElement('li');
+                    li.textContent = "No se detectaron daños específicos en la imagen analizada.";
+                    damageListUl.appendChild(li);
+                    resultsDiv.style.display = 'block';
+                }
+                
+                // Mostrar presupuesto si está disponible
+                if (data.repair_budget) {
+                    // Crear elemento para renderizar markdown
+                    const markdownContainer = document.createElement('div');
+                    markdownContainer.className = 'markdown-body';
+                    
+                    // Convertir markdown a HTML usando marked.js
+                    markdownContainer.innerHTML = marked.parse(data.repair_budget);
+                    
+                    // Agregar al contenedor de presupuesto
+                    budgetContent.appendChild(markdownContainer);
+                    budgetArea.style.display = 'block';
+                    
+                    // Desplazar a presupuesto
+                    budgetArea.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    // Desplazar a resultados si no hay presupuesto
+                    resultsDiv.scrollIntoView({ behavior: 'smooth' });
+                }
+
+            } catch (error) {
+                console.error('Error en la solicitud fetch:', error);
+                showError(error.message || "Ocurrió un error al conectar con el servidor.");
+            } finally {
+                // Limpiar UI después de la carga (éxito o error)
+                loadingDiv.style.display = 'none';
+                submitButton.disabled = false;
+            }
+        });
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorDiv.style.display = 'block';
+            resultsDiv.style.display = 'none';
+            budgetArea.style.display = 'none';
+            // Desplazar al mensaje de error
+            errorDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
