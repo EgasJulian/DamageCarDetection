@@ -11,7 +11,7 @@
       },
       {
           "src": "frontend/**", 
-          "use": "@vercel/frontend"
+          "use": "@vercel/static"
       }
     ],
     "routes": [
