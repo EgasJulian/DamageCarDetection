@@ -42,7 +42,7 @@ def calculate_repair_budget(damaged_parts_list, damaged_img):
     - Repuestos: $900.000 COP
     - Mano de obra: $600.000 COP"
 
-    Aqui esta la imagen del vehiculo dañado, para que valides tu respuesta:
+    Aqui esta la imagen del vehiculo dañado, para que valides tu respuesta, , si consideras que hace falta alguna parte dañada o sobra alguna en la lista que te entregue, ajustala:
     {damaged_img}
     """
     client = genai.Client(api_key=API_KEY)
